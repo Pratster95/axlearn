@@ -630,7 +630,7 @@ class SpmdTrainer(Module):
                         )
                         self.vlog(3, "Done step %s", self.step)
                         num_steps += 1
-                        if num_steps % 100 == 0:
+                        if num_steps % 1 == 0:
                             now = time.perf_counter()
                             average_step_time = (now - start_time) / num_steps
                             self._step_log("Average step time: %s seconds", average_step_time)
@@ -1120,6 +1120,7 @@ class SpmdTrainer(Module):
             force run the evalers in the set and return 'evaler_summaries' output.
         """
         logging.log_first_n(logging.INFO, "global_input_batch=%s", 3, utils.shapes(input_batch))
+        start_time = time.perf_counter()
         with jax.profiler.StepTraceAnnotation("train", step_num=self.step):
             run_with_xsc = self._xsc_check_policy and self._xsc_check_policy(self.step)
             compiled_train_step_fn = self._get_compiled_train_step_fn(
@@ -1135,7 +1136,9 @@ class SpmdTrainer(Module):
                 outputs["loss"],
                 jax.tree.map(lambda x: x.item() if x.ndim == 0 else f"T{x.shape}", outputs["aux"]),
             )
-
+        now = time.perf_counter()
+        average_step_time = (now - start_time)
+        self._step_log("Average step time in _run_step: %s seconds", average_step_time)
         self.summary_writer(self.step, {"loss": outputs["loss"], **outputs["summaries"]})
         # Aggregate summaries across evalers.
         evaler_summaries = self._run_eval(

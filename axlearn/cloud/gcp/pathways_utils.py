@@ -106,6 +106,7 @@ def get_colocated_python_image(image_id: str) -> str:
     path, tag = image_id.rsplit(":", maxsplit=1)
     repo, _ = path.rsplit("/", maxsplit=1)
     return f"{repo}/{_COLOCATED_PYTHON_SIDECAR_NAME}:{tag}"
+    # return "us-docker.pkg.dev/cloud-tpu-multipod-dev/axlearn/prati-colo-13:prati-colo-test-13"
 
 
 def parse_xla_flag_value(value: str) -> Union[int, bool, str]:

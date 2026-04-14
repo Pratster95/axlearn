@@ -2,7 +2,7 @@
 
 ARG TARGET=base
 ARG BASE_IMAGE=ubuntu:24.04
-ARG BASE_IMAGE_COLOCATED=us-docker.pkg.dev/cloud-tpu-v2-images/pathways-colocated-python/sidecar:2026_02_09-python_3.12-jax_0.8.3
+ARG BASE_IMAGE_COLOCATED=us-docker.pkg.dev/cloud-tpu-v2-images/pathways-colocated-python/sidecar:2026_03_02-python_3.12-jax_0.8.3
 
 FROM ${BASE_IMAGE} AS base
 
@@ -91,7 +91,7 @@ ENTRYPOINT ["/opt/apache/beam/boot"]
 
 FROM base AS tpu
 
-ARG EXTRAS=
+ARG EXTRAS=orbax
 
 # Ensure we install the TPU version, even if building locally.
 # Jax will fallback to CPU when run on a machine without TPU.
