@@ -442,7 +442,7 @@ class OrbaxCheckpointer(BaseCheckpointer):
                 create=True,
                 max_to_keep=cfg.keep_last_n,
                 keep_period=cfg.keep_period,
-                enable_async_checkpointing=True,
+                enable_async_checkpointing=False,
                 step_name_format=self._name_format,
                 should_save_fn=save_fn_with_summaries,
                 enable_background_delete=True,
@@ -579,7 +579,7 @@ class OrbaxCheckpointer(BaseCheckpointer):
                 step,
                 args=ocp.args.Composite(
                     index=ocp.args.JsonRestore(None),
-                    state=ocp.args.PyTreeRestore(item=state, restore_args=restore_args),
+                    state=ocp.args.PyTreeRestore(item=state, restore_args=restore_args, partial_restore=True),
                 ),
             )
         except FileNotFoundError as e:
