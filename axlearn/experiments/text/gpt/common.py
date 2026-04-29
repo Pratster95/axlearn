@@ -825,7 +825,7 @@ def get_trainer_config_fn(
             ckpt_config.max_concurrent_restore_gb = 8
             ckpt_config.max_concurrent_save_gb = 4
             ckpt_config.async_timeout_secs = 3600
-            ckpt_config.enable_single_replica_ckpt_restoring = True
+            ckpt_config.enable_single_replica_ckpt_restoring = False
             cfg.checkpointer = ckpt_config
 
 
