@@ -822,8 +822,8 @@ def get_trainer_config_fn(
             )
             ckpt_config.keep_period = min(max_step, keep_every_n_steps)
             ckpt_config.keep_last_n = 3
-            # ckpt_config.max_concurrent_restore_gb = 64
-            # ckpt_config.max_concurrent_save_gb = 64
+            # ckpt_config.max_concurrent_restore_gb = 128
+            ckpt_config.max_concurrent_save_gb = 128
             ckpt_config.async_timeout_secs = 3600
             ckpt_config.enable_single_replica_ckpt_restoring = False
             cfg.checkpointer = ckpt_config
