@@ -161,13 +161,6 @@ class _TfIteratorHandler(ocp.type_handlers.TypeHandler):
 
 
 ocp.type_handlers.register_type_handler(tf.data.Iterator, _TfIteratorHandler(), override=True)
-register_pathways_handlers(
-    checkpointing_impl=pathways_types.CheckpointingImpl.COLOCATED_PYTHON,
-    array_metadata_store=array_metadata_store_lib.Store(),
-    enable_write_sharding_file=False,
-)
-
-
 if _GRAIN_INSTALLED:
     # TODO(markblee): Generalize to PythonSavableHandler.
     class _GrainDatasetIteratorHandler(ocp.type_handlers.TypeHandler):
@@ -577,7 +570,7 @@ class OrbaxCheckpointer(BaseCheckpointer):
                 step,
                 args=ocp.args.Composite(
                     index=ocp.args.JsonRestore(None),
-                    state=ocp.args.PyTreeRestore(item=state, restore_args=restore_args, partial_restore=True),
+                    state=ocp.args.PyTreeRestore(item=state, restore_args=restore_args),
                 ),
             )
         except FileNotFoundError as e:

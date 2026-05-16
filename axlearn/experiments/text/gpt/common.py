@@ -729,6 +729,7 @@ def get_trainer_config_fn(
         cfg: SpmdTrainer.Config = SpmdTrainer.default_config()
         cfg.name = "gpt_trainer"
         cfg.model = model_cfg
+        cfg.log_every_n_steps = 1
         cfg.learner = learner_cfg
         cfg.max_step = max_step
         cfg.train_dtype = STEP_DTYPE
