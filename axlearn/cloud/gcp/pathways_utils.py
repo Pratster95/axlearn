@@ -499,7 +499,7 @@ class PathwaysReplicatedJob(BaseReplicatedJob):
         )
         self._update_env_list(env_list, "XCLOUD_ENVIRONMENT", "GCP")
         self._update_env_list(env_list, "JAX_PLATFORMS", "proxy")
-        self._update_env_list(env_list, "ENABLE_PATHWAYS_PERSISTENCE", "1")
+        self._update_env_list(env_list, "ENABLE_PATHWAYS_PERSISTENCE", "0")
         self._update_env_list(env_list, "TPU_SKIP_MDS_QUERY", "true")
         # Prevents missing logs when there is crash.
         self._update_env_list(env_list, "PYTHONUNBUFFERED", "1")

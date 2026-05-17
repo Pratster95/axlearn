@@ -577,7 +577,7 @@ class OrbaxCheckpointer(BaseCheckpointer):
                 step,
                 args=ocp.args.Composite(
                     index=ocp.args.JsonRestore(None),
-                    state=ocp.args.PyTreeRestore(item=state, restore_args=restore_args, partial_restore=True),
+                    state=ocp.args.PyTreeRestore(item=state, restore_args=restore_args),
                 ),
             )
         except FileNotFoundError as e:
