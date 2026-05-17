@@ -28,6 +28,8 @@ from absl import logging
 from etils import epath
 from orbax.checkpoint._src.metadata import array_metadata_store as array_metadata_store_lib
 from orbax.checkpoint._src.serialization.type_handlers import ArrayHandler
+from orbax.checkpoint._src.serialization.pathways_handler_registry import register_pathways_handlers
+from orbax.checkpoint._src.serialization import pathways_types
 from orbax.checkpoint.checkpoint_manager import CheckpointInfo, _ShouldSaveFnPolicy
 from tensorflow.python.checkpoint import async_checkpoint_helper
 
@@ -159,14 +161,10 @@ class _TfIteratorHandler(ocp.type_handlers.TypeHandler):
 
 
 ocp.type_handlers.register_type_handler(tf.data.Iterator, _TfIteratorHandler(), override=True)
-ocp.type_handlers.register_type_handler(
-    jax.Array,
-    ArrayHandler(
-        array_metadata_store=array_metadata_store_lib.Store(),
-        use_replica_parallel=False,
-        enable_write_sharding_file=False,
-    ),
-    override=True,
+register_pathways_handlers(
+    checkpointing_impl=pathways_types.CheckpointingImpl.COLOCATED_PYTHON,
+    array_metadata_store=array_metadata_store_lib.Store(),
+    enable_write_sharding_file=False,
 )
 
 

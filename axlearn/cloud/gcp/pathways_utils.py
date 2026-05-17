@@ -58,7 +58,7 @@ _COLOCATED_CONTAINER_PORT = 50051
 # Pin to specific pathways image version for stable release.
 # There is no guarantee that this image will work with newer Jax releases.
 # Note: This image has been tested with both Jax 0.8.2 and Jax 0.9.0
-_PATHWAYS_IMAGE_TAG = "20260128-jax_0.9.0"
+_PATHWAYS_IMAGE_TAG = "20260422-jax_0.9.1"
 # The docker image used by pathways proxy container.
 _PATHWAYS_PROXY_IMAGE = (
     f"us-docker.pkg.dev/cloud-tpu-v2-images/pathways/proxy_server:{_PATHWAYS_IMAGE_TAG}"
@@ -316,6 +316,7 @@ def _build_base_pathways_worker_container(
         f"--gcs_scratch_location={base_container_builder.config.output_dir}/pathways-staging",
         # Recycling host memory gives a slight increase in performance.
         "--tpu_pinned_host_allocation_recycle=true",
+        "--enforce_kernel_ipv6_support=false",
     ]
     if not colocated_python_plugin.is_colocated_python_enabled:
         args.append(
@@ -498,7 +499,7 @@ class PathwaysReplicatedJob(BaseReplicatedJob):
         )
         self._update_env_list(env_list, "XCLOUD_ENVIRONMENT", "GCP")
         self._update_env_list(env_list, "JAX_PLATFORMS", "proxy")
-        self._update_env_list(env_list, "ENABLE_PATHWAYS_PERSISTENCE", "1")
+        self._update_env_list(env_list, "ENABLE_PATHWAYS_PERSISTENCE", "0")
         self._update_env_list(env_list, "TPU_SKIP_MDS_QUERY", "true")
         # Prevents missing logs when there is crash.
         self._update_env_list(env_list, "PYTHONUNBUFFERED", "1")
@@ -615,6 +616,7 @@ class PathwaysReplicatedJob(BaseReplicatedJob):
                     f"--instance_count={pathways_instance_count}",
                     f"--instance_type={instance_type}",
                     f"--gcs_scratch_location={staging_location}",
+                    "--enforce_kernel_ipv6_support=false",
                 ],
                 volumeMounts=[dict(name="shared-output", mountPath="/output")],
             ),
@@ -1238,6 +1240,7 @@ class PathwaysLeaderWorkerTemplate(BaseLeaderWorkerTemplate):
                 "--instance_count=1",
                 f"--instance_type={pathways_tpu_version}:{system.topology}",
                 f"--gcs_scratch_location={staging_location}",
+                "--enforce_kernel_ipv6_support=false",
             ],
             ports=[dict(containerPort=_PATHWAYS_RESOURCE_MANAGER_PORT)],
         )
